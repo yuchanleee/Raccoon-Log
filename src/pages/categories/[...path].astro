@@ -1,0 +1,132 @@
+---
+import type { GetStaticPaths, Page } from "astro";
+import type { CollectionEntry } from "astro:content";
+import { getCollection } from "astro:content";
+
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Main from "@/components/Main.astro";
+import Card from "@/components/Card.astro";
+import Footer from "@/components/Footer.astro";
+import Pagination from "@/components/Pagination.astro";
+
+import { getSortedPosts } from "@/utils/getSortedPosts";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+
+export const getStaticPaths = (async () => {
+  const posts = await getCollection("posts", ({ data }) => !data.draft);
+
+  const categoryPaths = new Set<string>();
+
+  for (const post of posts) {
+    const category = post.data.category;
+
+    if (!category) continue;
+
+    for (let i = 1; i <= category.length; i++) {
+      categoryPaths.add(category.slice(0, i).join("/"));
+    }
+  }
+
+  const paths = [];
+
+  for (const categoryPath of categoryPaths) {
+    const pathParts = categoryPath.split("/");
+
+    const filteredPosts = getSortedPosts(
+      posts.filter(post => {
+        const category = post.data.category ?? [];
+
+        return pathParts.every((part, index) => category[index] === part);
+      })
+    );
+
+    const pageSize = config.posts.perPage;
+    const total = filteredPosts.length;
+    const lastPage = Math.ceil(total / pageSize);
+
+    for (let currentPage = 1; currentPage <= lastPage; currentPage++) {
+      const start = (currentPage - 1) * pageSize;
+      const end = Math.min(start + pageSize, total) - 1;
+
+      const data = filteredPosts.slice(start, start + pageSize);
+
+      const baseUrl = `/categories/${categoryPath}`;
+
+      const currentUrl =
+        currentPage === 1 ? baseUrl : `${baseUrl}/${currentPage}`;
+
+      const prevUrl =
+        currentPage === 1
+          ? undefined
+          : currentPage === 2
+            ? baseUrl
+            : `${baseUrl}/${currentPage - 1}`;
+
+      const nextUrl =
+        currentPage === lastPage ? undefined : `${baseUrl}/${currentPage + 1}`;
+
+      const page: Page<CollectionEntry<"posts">> = {
+        data,
+        start,
+        end,
+        size: pageSize,
+        total,
+        currentPage,
+        lastPage,
+        url: {
+          current: currentUrl,
+          prev: prevUrl,
+          next: nextUrl,
+          first: currentPage === 1 ? undefined : baseUrl,
+          last: currentPage === lastPage ? undefined : `${baseUrl}/${lastPage}`,
+        },
+      };
+
+      paths.push({
+        params: {
+          path:
+            currentPage === 1 ? categoryPath : `${categoryPath}/${currentPage}`,
+        },
+        props: {
+          page,
+          categoryPath: pathParts,
+        },
+      });
+    }
+  }
+
+  return paths;
+}) satisfies GetStaticPaths;
+
+const { page, categoryPath } = Astro.props;
+
+const locale = Astro.currentLocale ?? config.site.lang;
+const t = useTranslations(locale);
+
+type CategoryKey = keyof typeof t.categories;
+
+const categoryKey = categoryPath.at(-1) as CategoryKey | undefined;
+
+const categoryTitle = categoryKey
+  ? (t.categories[categoryKey] ?? categoryKey)
+  : t.categories.title;
+---
+
+<Layout title={`${categoryTitle} | ${config.site.title}`}>
+  <Header />
+
+  <Breadcrumb page={page.currentPage} />
+
+  <Main pageTitle={categoryTitle} pageDesc={t.pages.categoryDesc}>
+    <ul>
+      {page.data.map(data => <Card {...data} />)}
+    </ul>
+  </Main>
+
+  <Pagination {page} />
+
+  <Footer noMarginTop={page.lastPage > 1} />
+</Layout>

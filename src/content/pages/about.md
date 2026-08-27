@@ -1,37 +1,21 @@
 ---
-title: "About"
-description: "A bit about me and this blog."
+title: "소개"
+description: "공부 기록과 개인 프로젝트, 일상을 담는 공간입니다."
 ---
 
-AstroPaper is a minimal, accessible and SEO-friendly blog theme built with [Astro](https://astro.build/) and [Tailwind CSS](https://tailwindcss.com/).
+<figure style="max-width: 300px; margin: 0 auto;">
+  <img
+    src="https://i.pinimg.com/736x/e2/ce/32/e2ce327aef00357952a9e2704a1fbf10.jpg"
+    alt="Pinterest Image"
+    style="width: 100%; height: auto; border-radius: 8px;"
+  />
+  <figcaption style="text-align: center; font-size: 0.85rem; margin-top: 8px;">
+    출처: <a href="https://kr.pinterest.com/pin/704954147967187591/" target="_blank" rel="noopener noreferrer">Pinterest</a>
+  </figcaption>
+</figure>
 
-![Astro Paper](@/assets/images/astropaper-og.jpg)
+안녕하세요! 잡다한거 배우기 좋아하는 이유찬입니다. 
 
-AstroPaper provides a solid foundation for blogs, or even portfolios\_ with full markdown support, built-in dark mode, and a clean layout that works out-of-the-box.
+뭔가 남기지 않으면 너무 빠르게 흘러가는 날들이기에 저라는 사람의 발자취를 남겨보고자 이렇게 블로그를 만들게 되었습니다. 개인적인 잡동사니 창고쯤으로 생각해주십쇼
 
-The blog posts in this theme also serve as guides, docs or example articles\_ making AstroPaper a flexible starting point for your next content-driven site.
-
-## Features
-
-AstroPaper comes with a set of useful features that make content publishing easy and effective:
-
-- SEO-friendly
-- Fast performance
-- Light & dark mode
-- Highly customizable
-- Organizable blog posts
-- Responsive & accessible
-- Static search with [PageFind](https://pagefind.app/)
-- Automatic social image generation
-
-and so much more.
-
-## Show your support
-
-If you like [AstroPaper](https://github.com/satnaing/astro-paper), consider giving it a star ⭐️.
-
-Found a bug 🐛 or have an improvement ✨ in mind? Feel free to open an [issue](https://github.com/satnaing/astro-paper/issues), submit a [pull request](https://github.com/satnaing/astro-paper/pulls) or start a [discussion](https://github.com/satnaing/astro-paper/discussions).
-
-If you find this theme helpful, you can also [sponsor me on GitHub](https://github.com/sponsors/satnaing) or [buy me a coffee](https://buymeacoffee.com/satnaing) to show your support — every penny counts.
-
-Kyay zuu! 🙏🏼
+이걸 보는 당신, 오늘도 좋은 하루 되시길 

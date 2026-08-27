@@ -1,0 +1,183 @@
+---
+import "@pagefind/default-ui/css/ui.css";
+import { getAssetPath } from "@/utils/withBase";
+
+type Props = {
+  id?: string;
+};
+
+const { id = "pagefind-search" } = Astro.props;
+
+const pagefindBundlePath = getAssetPath("pagefind/");
+---
+
+<div
+  id={id}
+  class="pagefind-search"
+  data-pagefind-search
+  data-bundle-path={pagefindBundlePath}
+>
+</div>
+
+<script>
+  function enableResultLinks() {
+    const results = document.querySelectorAll<HTMLElement>(
+      ".pagefind-search .pagefind-ui__result"
+    );
+
+    for (const result of results) {
+      if (result.dataset.clickable === "true") continue;
+
+      const link = result.querySelector<HTMLAnchorElement>(
+        ".pagefind-ui__result-link"
+      );
+
+      if (!link) continue;
+
+      result.dataset.clickable = "true";
+
+      result.addEventListener("click", event => {
+        const target = event.target as HTMLElement;
+
+        if (target.closest("a")) return;
+
+        link.click();
+      });
+    }
+  }
+
+  function observeResults() {
+    const searchContainers = document.querySelectorAll<HTMLElement>(
+      "[data-pagefind-search]"
+    );
+
+    for (const searchContainer of searchContainers) {
+      if (searchContainer.dataset.observing === "true") continue;
+
+      searchContainer.dataset.observing = "true";
+
+      const observer = new MutationObserver(() => {
+        enableResultLinks();
+      });
+
+      observer.observe(searchContainer, {
+        childList: true,
+        subtree: true,
+      });
+    }
+  }
+
+  function initSearch() {
+    const searchContainers = document.querySelectorAll<HTMLElement>(
+      "[data-pagefind-search]"
+    );
+
+    for (const searchContainer of searchContainers) {
+      const bundlePath = searchContainer.dataset.bundlePath;
+      if (!bundlePath) continue;
+
+      if (searchContainer.querySelector("form")) continue;
+
+      const elementId = searchContainer.id;
+      if (!elementId) continue;
+
+      const onIdle =
+        window.requestIdleCallback || ((cb: () => void) => setTimeout(cb, 1));
+
+      onIdle(async () => {
+        // @ts-expect-error — Missing types for @pagefind/default-ui package.
+        const { PagefindUI } = await import("@pagefind/default-ui");
+
+        if (searchContainer.querySelector("form")) return;
+
+        new PagefindUI({
+          element: `#${elementId}`,
+          bundlePath,
+          showImages: false,
+          showSubResults: false,
+        });
+      });
+    }
+  }
+
+  initSearch();
+  observeResults();
+
+  document.addEventListener("astro:after-swap", () => {
+    initSearch();
+    observeResults();
+  });
+</script>
+
+<style is:global>
+  .pagefind-search {
+    --pagefind-ui-font: var(--font-app);
+    --pagefind-ui-text: var(--foreground);
+    --pagefind-ui-background: var(--background);
+    --pagefind-ui-border: var(--border);
+    --pagefind-ui-primary: var(--accent);
+    --pagefind-ui-tag: var(--background);
+    --pagefind-ui-border-radius: 0.375rem;
+    --pagefind-ui-border-width: 1px;
+    --pagefind-ui-image-border-radius: 8px;
+    --pagefind-ui-image-box-ratio: 3 / 2;
+  }
+
+  .pagefind-search form::before {
+    background-color: var(--foreground);
+  }
+
+  .pagefind-search input {
+    font-weight: 400;
+    border: 1px solid var(--border);
+  }
+
+  .pagefind-search input:focus-visible {
+    outline: 1px solid var(--accent);
+  }
+
+  .pagefind-search
+    .pagefind-ui
+    .pagefind-ui__result-title
+    .pagefind-ui__result-link {
+    color: var(--pagefind-ui-text);
+    outline-offset: 1px;
+    outline-color: var(--accent);
+    text-decoration: none;
+  }
+
+  .pagefind-search
+    .pagefind-ui
+    .pagefind-ui__result-title
+    .pagefind-ui__result-link:hover {
+    text-decoration: none;
+  }
+
+  .pagefind-search .pagefind-ui__result-title a:focus-visible,
+  .pagefind-search .pagefind-ui__search-clear:focus-visible {
+    text-decoration-line: none;
+    outline-width: 2px;
+    outline-style: dashed;
+  }
+
+  .pagefind-search .pagefind-ui__result:last-of-type {
+    border-bottom: 0;
+  }
+
+  .pagefind-search
+    .pagefind-ui__result-nested
+    .pagefind-ui__result-link::before {
+    font-family: system-ui;
+  }
+
+  .pagefind-search .pagefind-ui .pagefind-ui__result {
+    padding: 10px 4px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+  }
+
+  .pagefind-search .pagefind-ui__result:hover {
+    background-color: var(--border);
+  }
+</style>

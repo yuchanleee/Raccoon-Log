@@ -1,7 +1,6 @@
 ---
 import { getCollection } from "astro:content";
 import { getRelativeLocaleUrl } from "astro:i18n";
-import IconRss from "@/assets/icons/IconRss.svg";
 import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
@@ -12,6 +11,7 @@ import LinkButton from "@/components/LinkButton.astro";
 import { getSortedPosts } from "@/utils/getSortedPosts";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
+import RaccoonSprite from "@/assets/images/raccoon.png";
 
 const { socials, posts: postsConfig } = config;
 
@@ -27,57 +27,38 @@ const homePath = getRelativeLocaleUrl(locale, "");
 
 <Layout>
   <Header />
+
   <main
     id="main-content"
     data-layout="index"
     data-home-path={homePath}
     class="app-layout my-1"
   >
-    <section id="hero" class="border-border border-b pt-8 pb-6">
-      <h1 class="my-4 inline-block text-4xl font-bold sm:my-8 sm:text-5xl">
-        Mingalaba
-      </h1>
-      <a
-        target="_blank"
-        href={`${import.meta.env.BASE_URL.replace(/\/?$/, "/")}rss.xml`}
-        class="inline-block"
-        aria-label="RSS Feed"
-        title="RSS Feed"
-      >
-        <IconRss
-          width={20}
-          height={20}
-          class="stroke-accent scale-125 stroke-3 rtl:-rotate-90"
-        />
-        <span class="sr-only">RSS Feed</span>
-      </a>
+    <section id="hero" class="border-border relative border-b pt-8 pb-6">
+      <div class="hero-content">
+        <h1 class="my-4 inline-block text-2xl font-bold sm:my-8 sm:text-3xl">
+          Raccoon's archive
+        </h1>
 
-      <p>
-        AstroPaper is a minimal, responsive, accessible and SEO-friendly Astro
-        blog theme. This theme follows best practices and provides accessibility
-        out of the box. Light and dark mode are supported by default. Moreover,
-        additional color schemes can also be configured.
-      </p>
-      <p class="mt-2">
-        Read the blog posts or check{" "}
-        <LinkButton
-          class="hover:text-accent underline decoration-dashed underline-offset-4"
-          href="https://github.com/satnaing/astro-paper#readme"
-        >
-          README
-        </LinkButton>{" "}
-        for more info.
-      </p>
-      {
-        socials.length > 0 && (
-          <div class="mt-4 flex max-sm:flex-col sm:items-center">
-            <div class="me-2 mb-1 whitespace-nowrap sm:mb-0">
-              {t.home.socialLinks}:
-            </div>
-            <Socials />
+        <div class="raccoon-frame">
+          <div id="raccoon">
+            <img id="raccoon-sprite" src={RaccoonSprite.src} alt="Raccoon" />
           </div>
-        )
-      }
+        </div>
+
+        <p class="text-lg">볼 것도 없는 곳인데, 뭘 그리 두리번거리는가?</p>
+
+        {
+          socials.length > 0 && (
+            <div class="mt-4 flex max-sm:flex-col sm:items-center">
+              <div class="me-2 mb-1 whitespace-nowrap sm:mb-0">
+                {t.home.socialLinks}:
+              </div>
+              <Socials />
+            </div>
+          )
+        }
+      </div>
     </section>
 
     {
@@ -92,6 +73,7 @@ const homePath = getRelativeLocaleUrl(locale, "");
           <h2 class="text-2xl font-semibold tracking-wide">
             {t.home.featured}
           </h2>
+
           <ul>
             {featuredPosts.map(data => (
               <Card variant="h3" {...data} />
@@ -107,6 +89,7 @@ const homePath = getRelativeLocaleUrl(locale, "");
           <h2 class="text-2xl font-semibold tracking-wide">
             {t.home.recentPosts}
           </h2>
+
           <ul>
             {recentPosts.slice(0, postsConfig.perIndex).map(data => (
               <Card variant="h3" {...data} />
@@ -123,6 +106,7 @@ const homePath = getRelativeLocaleUrl(locale, "");
       </LinkButton>
     </div>
   </main>
+
   <Footer />
 </Layout>
 
@@ -130,9 +114,141 @@ const homePath = getRelativeLocaleUrl(locale, "");
   document.addEventListener("astro:page-load", () => {
     const indexLayout = (document.querySelector("#main-content") as HTMLElement)
       ?.dataset;
+
     const baseRoot = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+
     if (indexLayout?.layout) {
       sessionStorage.setItem("backUrl", indexLayout.homePath ?? baseRoot);
     }
+
+    const raccoonSprite = document.querySelector(
+      "#raccoon-sprite"
+    ) as HTMLElement;
+
+    if (!raccoonSprite) return;
+
+    const getFrameWidth = () => {
+      return window.innerWidth <= 1100 ? 160 : 210;
+    };
+
+    const showFrame = (frame: number) => {
+      const frameWidth = getFrameWidth();
+
+      raccoonSprite.style.transform = `translateX(-${frame * frameWidth}px)`;
+    };
+
+    const wait = (ms: number) => {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    };
+
+    const blink = async () => {
+      showFrame(1);
+      await wait(40);
+
+      showFrame(2);
+      await wait(40);
+
+      showFrame(3);
+      await wait(40);
+
+      showFrame(4);
+      await wait(40);
+
+      showFrame(5);
+      await wait(40);
+
+      showFrame(0);
+    };
+
+    const startBlinking = async () => {
+      while (true) {
+        const delay = 3000 + Math.random() * 2000;
+
+        await wait(delay);
+        await blink();
+      }
+    };
+
+    startBlinking();
   });
 </script>
+
+<style>
+  #hero {
+    position: relative;
+  }
+
+  .hero-content {
+    min-width: 0;
+  }
+
+  .raccoon-frame {
+    position: absolute;
+    top: calc(50% - 10px);
+    left: -220px;
+
+    width: 220px;
+    height: 240px;
+
+    transform: translateY(-50%);
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+
+    overflow: hidden;
+  }
+
+  #raccoon {
+    position: relative;
+
+    width: 210px;
+    height: 210px;
+
+    overflow: hidden;
+
+    left: 15px;
+  }
+
+  #raccoon-sprite {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 1260px;
+    height: 210px;
+
+    max-width: none;
+
+    image-rendering: pixelated;
+  }
+
+  @media (max-width: 1100px) {
+    .raccoon-frame {
+      position: static;
+
+      width: 170px;
+      height: 170px;
+
+      margin-top: 0.5rem;
+      transform: none;
+    }
+
+    #raccoon {
+      width: 160px;
+      height: 160px;
+      left: 0;
+    }
+
+    #raccoon-sprite {
+      width: 960px;
+      height: 160px;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .raccoon-frame {
+      width: 100%;
+    }
+  }
+</style>

@@ -11,11 +11,13 @@
     scrollbar-width: auto;
     scrollbar-color: var(--color-muted) transparent;
   }
+
   a,
   button,
   #main-content {
     @apply outline-accent outline-offset-1 focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-dashed;
   }
+
   button:not(:disabled),
   [role="button"]:not(:disabled) {
     cursor: pointer;
@@ -32,6 +34,10 @@
 
 @utility active-nav {
   @apply underline decoration-wavy decoration-2 underline-offset-8;
+}
+
+@utility header-layout {
+  @apply mx-auto w-full max-w-5xl px-4;
 }
 
 :target {

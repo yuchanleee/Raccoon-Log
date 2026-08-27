@@ -1,0 +1,113 @@
+---
+import Search from "./Search.astro";
+---
+
+<div
+  id="desktop-search-wrapper"
+  class="desktop-search relative hidden w-40 transition-[width] duration-300 sm:block"
+>
+  <Search id="desktop-pagefind-search" />
+</div>
+
+<style is:global>
+  @media (min-width: 640px) {
+    #desktop-pagefind-search .pagefind-ui__drawer {
+      position: absolute;
+      top: calc(100% + 0.75rem);
+      right: -5rem;
+      z-index: 50;
+
+      width: 30rem;
+      max-height: 70vh;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+
+      padding: 1rem;
+
+      background: var(--background);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+
+      box-shadow: 0 10px 30px rgb(0 0 0 / 0.12);
+
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+
+      transition:
+        opacity 150ms ease,
+        visibility 150ms ease;
+    }
+
+    #desktop-search-wrapper.search-active
+      #desktop-pagefind-search
+      .pagefind-ui__drawer {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    #desktop-pagefind-search .pagefind-ui__search-clear {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+
+      transition: opacity 150ms ease;
+    }
+
+    #desktop-search-wrapper.search-active
+      #desktop-pagefind-search
+      .pagefind-ui__search-clear {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    #desktop-search-wrapper.search-active {
+      width: 18rem;
+    }
+  }
+
+  #desktop-pagefind-search .pagefind-ui__results-area {
+    margin-top: 0;
+  }
+</style>
+
+<script>
+  function initDesktopSearch() {
+    const wrapper = document.querySelector<HTMLElement>(
+      "#desktop-search-wrapper"
+    );
+
+    if (!wrapper) return;
+
+    if (wrapper.dataset.searchBound === "true") return;
+    wrapper.dataset.searchBound = "true";
+
+    wrapper.addEventListener("focusin", () => {
+      wrapper.classList.add("search-active");
+    });
+
+    wrapper.addEventListener("pointerdown", () => {
+      wrapper.classList.add("search-active");
+    });
+
+    document.addEventListener("pointerdown", event => {
+      const target = event.target as Node;
+
+      if (!wrapper.contains(target)) {
+        wrapper.classList.remove("search-active");
+
+        const searchInput = wrapper.querySelector<HTMLInputElement>(
+          ".pagefind-ui__search-input"
+        );
+
+        searchInput?.blur();
+      }
+    });
+  }
+
+  initDesktopSearch();
+
+  document.addEventListener("astro:after-swap", initDesktopSearch);
+</script>

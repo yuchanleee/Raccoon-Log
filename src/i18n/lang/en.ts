@@ -5,9 +5,27 @@ export default {
     home: "Home",
     posts: "Posts",
     tags: "Tags",
+    categories: "Categories",
     about: "About",
     archives: "Archives",
     search: "Search",
+  },
+  categories: {
+    title: "Categories",
+    math: "Math",
+    development: "Development",
+    project: "Project",
+    travel: "Travel",
+    others: "Others",
+    analysis: "Analysis",
+    "linear-algebra": "Linear Algebra",
+    sequence: "Sequence",
+    series: "Series",
+    continuity: "Continuity",
+    web: "Web",
+    ml: "Machine Learning",
+    astro: "Astro",
+    phaser: "Phaser",
   },
   post: {
     publishedAt: "Published at",
@@ -46,6 +64,9 @@ export default {
 
     postsTitle: "Posts",
     postsDesc: "All the articles I've posted.",
+
+    categoryDesc: "All the articles in this category.",
+    categoriesDesc: "Browse posts by category.",
 
     archivesTitle: "Archives",
     archivesDesc: "All the articles I've archived.",

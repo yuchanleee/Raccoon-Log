@@ -1,0 +1,92 @@
+---
+import type { CategoryTree } from "@/utils/buildCategoryTree";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { categoryOrder } from "@/data/categoryOrder";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+
+type Props = {
+  tree: CategoryTree;
+  path?: string[];
+  depth?: number;
+};
+
+const { tree, path = [], depth = 0 } = Astro.props;
+
+const locale = Astro.currentLocale ?? config.site.lang;
+const t = useTranslations(locale);
+
+const pathKey = path.length === 0 ? "root" : path.join("/");
+const order = categoryOrder[pathKey] ?? [];
+
+const sortedEntries = Object.entries(tree).sort(([a], [b]) => {
+  const indexA = order.indexOf(a);
+  const indexB = order.indexOf(b);
+
+  if (indexA === -1 && indexB === -1) {
+    return a.localeCompare(b);
+  }
+
+  if (indexA === -1) return 1;
+  if (indexB === -1) return -1;
+
+  return indexA - indexB;
+});
+---
+
+<ul>
+  {
+    sortedEntries.map(([name, children]) => {
+      const currentPath = [...path, name];
+      const categoryPath = currentPath.join("/");
+
+      return (
+        <li class="category-item">
+          <div class="category-row" style={`padding-left: ${depth * 24}px`}>
+            <span class="category-dot">·</span>
+
+            <a
+              href={getRelativeLocaleUrl(locale, `categories/${categoryPath}`)}
+              class="category-link"
+            >
+              {t.categories[name as keyof typeof t.categories] ?? name}
+            </a>
+          </div>
+
+          {Object.keys(children).length > 0 && (
+            <Astro.self tree={children} path={currentPath} depth={depth + 1} />
+          )}
+        </li>
+      );
+    })
+  }
+</ul>
+
+<style>
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .category-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0.5rem 0;
+  }
+
+  .category-dot {
+    font-size: 1.2rem;
+    line-height: 1;
+  }
+
+  .category-link {
+    font-size: 1rem;
+    text-decoration: none;
+  }
+
+  .category-link:hover {
+    color: var(--accent);
+  }
+</style>

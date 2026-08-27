@@ -3,9 +3,27 @@ export interface UIStrings {
     home: string;
     posts: string;
     tags: string;
+    categories: string;
     about: string;
     archives: string;
     search: string;
+  };
+  categories: {
+    title: string;
+    math: string;
+    development: string;
+    project: string;
+    travel: string;
+    others: string;
+    analysis: string;
+    "linear-algebra": string;
+    sequence: string;
+    series: string;
+    continuity: string;
+    web: string;
+    ml: string;
+    astro: string;
+    phaser: string;
   };
   post: {
     publishedAt: string;
@@ -44,6 +62,9 @@ export interface UIStrings {
 
     postsTitle: string;
     postsDesc: string;
+
+    categoryDesc: string;
+    categoriesDesc: string;
 
     archivesTitle: string;
     archivesDesc: string;
