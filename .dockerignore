@@ -1,8 +1,9 @@
-# Ignore Astro files
-*.astro
-
-# Ignore node_modules directory
+# Dependencies
 node_modules/
 
-# Ignore build output
+# Build output
 dist/
+
+# Git
+.git/
+.github/
