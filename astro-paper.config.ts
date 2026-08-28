@@ -2,13 +2,13 @@ import { defineAstroPaperConfig } from "./src/types/config";
 
 export default defineAstroPaperConfig({
   site: {
-    url: "https://astro-paper.pages.dev/",
+    url: "https://https://raccoonlog.com/",
     title: "Raccoon Log",
     description: "A personal blog about everything in my head",
     author: "Yuchan Lee",
-    profile: "https://satna.ing",
+    profile: "https://github.com/yuchanleee",
     ogImage: "default-og.jpg",
-    lang: "en",
+    lang: "ko",
     timezone: "Asia/Seoul",
     dir: "ltr",
   },
@@ -24,7 +24,7 @@ export default defineAstroPaperConfig({
     showBackButton: true,
     editPost: {
       enabled: true,
-      url: "https://github.com/satnaing/astro-paper/edit/main/",
+      url: "https://github.com/yuchanleee/Raccoon-Log/edit/main/",
     },
     search: "pagefind",
   },

@@ -43,3 +43,13 @@
 :target {
   scroll-margin-block: 1rem;
 }
+
+@media (max-width: 899px) {
+  .mobile-tap-flash {
+    border-radius: 8px;
+  }
+
+  .mobile-tap-flash.tap-flash {
+    background-color: var(--border);
+  }
+}

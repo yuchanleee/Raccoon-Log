@@ -1,11 +1,9 @@
 export const categoryOrder: Record<string, string[]> = {
-    root: ["math", "development", "project", "travel", "others"],
+    root: ["Math", "Computer Science", "Projects", "Daily Life", "others"],
 
-    math: ["analysis", "linear-algebra"],
+    "Math": ["analysis", "linear-algebra"],
 
-    "math/analysis": ["sequence", "series", "continuity"],
+    "Computer Science": ["Web", "ML"],
 
-    development: ["web", "ml"],
-
-    "development/web": ["astro", "phaser"],
+    "Daily Life": ["일상", "잡생각"]
 };

@@ -14,13 +14,17 @@ const { variant: Heading = "h2", id, data, filePath } = Astro.props;
 const { title, description, category, cover, ...props } = data;
 
 const lowestCategory = category.at(-1);
+const postUrl = getPostUrl(id, filePath, Astro.currentLocale);
 ---
 
-<li class="border-border my-8 border-b pb-8 last:border-b-0">
+<li
+  class="mobile-tap-card mobile-tap-flash border-border my-8 border-b pb-8 last-of-type:border-b-0"
+  data-post-url={postUrl}
+>
   <div class="post-card">
     <div class="post-content">
       <a
-        href={getPostUrl(id, filePath, Astro.currentLocale)}
+        href={postUrl}
         class:list={[
           "text-accent inline-block text-xl font-medium",
           "decoration-dashed underline-offset-4 hover:underline",
@@ -52,10 +56,38 @@ const lowestCategory = category.at(-1);
   </div>
 </li>
 
+<script>
+  function initMobilePostCards() {
+    const cards = document.querySelectorAll<HTMLElement>(".mobile-tap-card");
+
+    for (const card of cards) {
+      if (card.dataset.cardBound === "true") continue;
+
+      card.dataset.cardBound = "true";
+
+      card.addEventListener("click", event => {
+        if (!window.matchMedia("(max-width: 899px)").matches) return;
+
+        const target = event.target as HTMLElement;
+        const url = card.dataset.postUrl;
+
+        if (!url) return;
+
+        if (target.closest("a")) return;
+
+        window.location.href = url;
+      });
+    }
+  }
+
+  initMobilePostCards();
+  document.addEventListener("astro:after-swap", initMobilePostCards);
+</script>
+
 <style>
   .post-card {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 2rem;
   }
 
@@ -65,24 +97,23 @@ const lowestCategory = category.at(-1);
   }
 
   .post-cover {
-    width: 240px;
-    height: 150px;
-
+    width: 280px;
+    height: 200px;
     flex-shrink: 0;
     object-fit: cover;
-
     border-radius: 10px;
   }
 
   @media (max-width: 639px) {
     .post-card {
       flex-direction: column;
+      align-items: stretch;
       gap: 1rem;
     }
 
     .post-cover {
-      width: 100%;
-      height: 220px;
+      width: 280px;
+      height: 200px;
     }
   }
 </style>

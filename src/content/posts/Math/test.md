@@ -5,7 +5,7 @@ title: Cauchy sequence
 featured: false
 draft: false
 category:
-  - math
+  - Math
   - analysis
 tags:
   - math

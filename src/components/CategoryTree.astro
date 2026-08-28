@@ -2,7 +2,6 @@
 import type { CategoryTree } from "@/utils/buildCategoryTree";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { categoryOrder } from "@/data/categoryOrder";
-import { useTranslations } from "@/i18n";
 import config from "@/config";
 
 import IconCaretRight from "@/assets/icons/IconCaretRight.svg";
@@ -17,7 +16,6 @@ type Props = {
 const { tree, path = [], depth = 0 } = Astro.props;
 
 const locale = Astro.currentLocale ?? config.site.lang;
-const t = useTranslations(locale);
 
 const pathKey = path.length === 0 ? "root" : path.join("/");
 const order = categoryOrder[pathKey] ?? [];
@@ -90,7 +88,7 @@ const sortedEntries = Object.entries(tree).sort(([a], [b]) => {
               href={getRelativeLocaleUrl(locale, `categories/${categoryPath}`)}
               class="category-link"
             >
-              {t.categories[name as keyof typeof t.categories] ?? name}
+              {name}
             </a>
           </div>
 

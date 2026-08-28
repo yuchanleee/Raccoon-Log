@@ -10,20 +10,6 @@ export interface UIStrings {
   };
   categories: {
     title: string;
-    math: string;
-    development: string;
-    project: string;
-    travel: string;
-    others: string;
-    analysis: string;
-    "linear-algebra": string;
-    sequence: string;
-    series: string;
-    continuity: string;
-    web: string;
-    ml: string;
-    astro: string;
-    phaser: string;
   };
   post: {
     publishedAt: string;

@@ -49,7 +49,7 @@ const rssHref = getRelativeLocaleUrl(
       cssVariable="--font-google-sans-code"
       preload={[{ subset: "latin", weight: 400, style: "normal" }]}
     />
-    <Font cssVariable="--font-noto-sans-kr" />
+    <Font cssVariable="--font-nanum-gothic" />
     <Font cssVariable="--font-noto-sans-jp" />
 
     <!-- Primary meta -->
@@ -122,8 +122,13 @@ const rssHref = getRelativeLocaleUrl(
     class="bg-background font-app text-foreground selection:bg-accent/75 selection:text-accent-foreground flex min-h-svh flex-col"
   >
     <slot />
+
     <script>
       import "@/scripts/theme";
+      import { initMobileTapFlash } from "@/scripts/mobileTapFlash";
+
+      initMobileTapFlash();
+      document.addEventListener("astro:after-swap", initMobileTapFlash);
     </script>
   </body>
 </html>

@@ -22,6 +22,7 @@ const t = useTranslations(locale);
 // Strip the base prefix so isActive comparisons work regardless of deploy subdirectory.
 // e.g. with base "/blog": "/blog/posts/slug" → "/posts/slug"
 const relativePath = stripBase(Astro.url.pathname);
+
 const pathWithoutTrailingSlash =
   relativePath.endsWith("/") && relativePath !== "/"
     ? relativePath.slice(0, -1)
@@ -32,6 +33,7 @@ const currentPath = stripLocale(pathWithoutTrailingSlash, locale);
 const isActive = (path: string) => {
   const currentPathArray = currentPath.split("/").filter(p => p.trim());
   const pathArray = path.split("/").filter(p => p.trim());
+
   return currentPath === path || currentPathArray[0] === pathArray[0];
 };
 ---
@@ -162,7 +164,7 @@ const isActive = (path: string) => {
         features.search !== false && (
           <button
             id="mobile-search-btn"
-            class="focus-outline hover:[&>svg]:stroke-accent relative size-10"
+            class="mobile-tap-flash focus-outline hover:[&>svg]:stroke-accent relative size-10"
             title={t.nav.search}
             aria-label={t.nav.search}
             aria-expanded="false"
@@ -178,7 +180,7 @@ const isActive = (path: string) => {
           <LinkButton
             href={getRelativeLocaleUrl(locale, "archives")}
             class:list={[
-              "focus-outline relative flex size-10 items-center justify-center",
+              "mobile-tap-flash focus-outline relative flex size-10 items-center justify-center",
               { "active-nav": isActive("/archives") },
             ]}
             title={t.nav.archives}
@@ -218,6 +220,7 @@ const isActive = (path: string) => {
           id="close-icon"
           class="absolute top-1/2 left-1/2 hidden size-6 -translate-x-1/2 -translate-y-1/2"
         />
+
         <IconMenuDeep
           id="menu-icon"
           class="absolute top-1/2 left-1/2 size-6 -translate-x-1/2 -translate-y-1/2"
@@ -232,7 +235,7 @@ const isActive = (path: string) => {
           <a
             href={getRelativeLocaleUrl(locale, "posts")}
             class:list={[
-              "hover:text-accent block px-4 py-3 font-medium",
+              "mobile-tap-flash hover:text-accent block px-4 py-3 font-medium",
               { "active-nav": isActive("/posts") },
             ]}
           >
@@ -244,7 +247,7 @@ const isActive = (path: string) => {
           <a
             href={getRelativeLocaleUrl(locale, "categories")}
             class:list={[
-              "hover:text-accent block px-4 py-3 font-medium",
+              "mobile-tap-flash hover:text-accent block px-4 py-3 font-medium",
               { "active-nav": isActive("/categories") },
             ]}
           >
@@ -256,7 +259,7 @@ const isActive = (path: string) => {
           <a
             href={getRelativeLocaleUrl(locale, "about")}
             class:list={[
-              "hover:text-accent block px-4 py-3 font-medium",
+              "mobile-tap-flash hover:text-accent block px-4 py-3 font-medium",
               { "active-nav": isActive("/about") },
             ]}
           >
@@ -265,6 +268,7 @@ const isActive = (path: string) => {
         </li>
       </ul>
     </nav>
+
     <MobileSearch />
   </div>
 </header>
@@ -296,7 +300,9 @@ const isActive = (path: string) => {
 
   function handleSkipToContent() {
     const skipLink = document.getElementById("skip-to-content");
+
     if (!skipLink) return;
+
     skipLink.addEventListener("click", e => {
       if (
         e.defaultPrevented ||
@@ -304,12 +310,17 @@ const isActive = (path: string) => {
         e.ctrlKey ||
         e.shiftKey ||
         e.button !== 0
-      )
+      ) {
         return;
+      }
+
       e.preventDefault();
+
       const target = document.getElementById("main-content");
+
       if (target) {
         target.setAttribute("tabindex", "-1");
+
         target.addEventListener(
           "blur",
           () => target.removeAttribute("tabindex"),
@@ -317,6 +328,7 @@ const isActive = (path: string) => {
             once: true,
           }
         );
+
         target.focus();
         target.scrollIntoView({ behavior: "smooth" });
       }

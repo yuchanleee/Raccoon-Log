@@ -3,14 +3,14 @@ title: "소개"
 description: "공부 기록과 개인 프로젝트, 일상을 담는 공간입니다."
 ---
 
-<figure style="max-width: 300px; margin: 0 auto;">
+<figure style="max-width: 200px; margin: 0 auto;">
   <img
-    src="https://i.pinimg.com/736x/e2/ce/32/e2ce327aef00357952a9e2704a1fbf10.jpg"
+    src="https://i.pinimg.com/736x/5d/25/3e/5d253e649f14e3aff23a729698e60254.jpg"
     alt="Pinterest Image"
     style="width: 100%; height: auto; border-radius: 8px;"
   />
   <figcaption style="text-align: center; font-size: 0.85rem; margin-top: 8px;">
-    출처: <a href="https://kr.pinterest.com/pin/704954147967187591/" target="_blank" rel="noopener noreferrer">Pinterest</a>
+    출처: <a href="https://kr.pinterest.com/pin/43980533857239532/" target="_blank" rel="noopener noreferrer">Pinterest</a>
   </figcaption>
 </figure>
 
