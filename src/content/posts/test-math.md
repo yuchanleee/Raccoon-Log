@@ -15,7 +15,7 @@ description: Test for tree structure.
 
 <div style="aspect-ratio: 16 / 9; width: 100%;">
   <iframe
-    src="https://www.youtube.com/embed/02f76-YsTBw"
+    src="https://www.youtube-nocookie.com/embed/02f76-YsTBw"
     title="YouTube video"
     style="width: 100%; height: 100%;"
     frameborder="0"

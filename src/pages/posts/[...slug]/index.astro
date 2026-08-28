@@ -13,6 +13,7 @@ import BackButton from "./_components/BackButton.astro";
 import BackToTopButton from "./_components/BackToTopButton.astro";
 import AdjacentPostNav from "./_components/AdjacentPostNav.astro";
 import config from "@/config";
+import IconCategory from "@/assets/icons/IconCategory.svg";
 
 export async function getStaticPaths() {
   const posts = await getCollection("posts");
@@ -111,48 +112,52 @@ const ogImage = ogImageUrl
   <main
     id="main-content"
     class:list={["app-layout", { "mt-8": !config.features.showBackButton }]}
-    data-pagefind-body
   >
-    <h1
-      style={{ viewTransitionName: toTransitionName(post.id) }}
-      class="text-accent inline-block text-2xl font-bold sm:text-3xl"
-    >
-      {title}
-    </h1>
+    <div data-pagefind-body>
+      <h1
+        style={{ viewTransitionName: toTransitionName(post.id) }}
+        class="text-accent inline-block text-2xl font-bold sm:text-3xl"
+      >
+        {title}
+      </h1>
 
-    <div class="my-2 flex items-center gap-2">
-      <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
-      {
-        lowestCategory && (
-          <>
-            <span class="text-muted-foreground">·</span>
-            <span class="text-muted-foreground">{lowestCategory}</span>
-          </>
-        )
-      }
+      <div class="my-2 flex items-center">
+        <div class="flex items-center gap-5">
+          <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
 
-      <span
-        aria-hidden="true"
+          {
+            lowestCategory && (
+              <span class="text-muted-foreground flex items-center gap-1">
+                <IconCategory class="size-5" />
+                <span class="text-sm">{lowestCategory}</span>
+              </span>
+            )
+          }
+        </div>
+
+        {
+          config.features.editPost?.enabled && !hideEditPost && (
+            <span
+              data-pagefind-ignore
+              class="border-border ms-5 flex items-center border-s ps-5 max-sm:hidden"
+            >
+              <EditPost {hideEditPost} {post} />
+            </span>
+          )
+        }
+      </div>
+
+      <article
+        id="article"
         class:list={[
-          "text-muted-foreground max-sm:hidden",
-          { hidden: !config.features.editPost?.enabled || hideEditPost },
+          "mt-8 w-full",
+          "app-prose max-w-app",
+          "prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)",
         ]}
       >
-        |
-      </span>
-      <EditPost {hideEditPost} {post} class="max-sm:hidden" />
+        <Content />
+      </article>
     </div>
-
-    <article
-      id="article"
-      class:list={[
-        "mt-8 w-full",
-        "app-prose max-w-app",
-        "prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)",
-      ]}
-    >
-      <Content />
-    </article>
 
     <hr class="my-8 border-dashed" />
 

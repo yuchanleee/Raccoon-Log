@@ -5,6 +5,9 @@ import { categoryOrder } from "@/data/categoryOrder";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
 
+import IconCaretRight from "@/assets/icons/IconCaretRight.svg";
+import IconCaretDown from "@/assets/icons/IconCaretDown.svg";
+
 type Props = {
   tree: CategoryTree;
   path?: string[];
@@ -40,10 +43,48 @@ const sortedEntries = Object.entries(tree).sort(([a], [b]) => {
       const currentPath = [...path, name];
       const categoryPath = currentPath.join("/");
 
+      const hasChildren = Object.keys(children).length > 0;
+
+      // depth 0, 1은 기본 펼침
+      // depth 2부터 기본 접힘
+      const defaultExpanded = depth < 2;
+
+      const categoryId = `category-${categoryPath
+        .replaceAll("/", "-")
+        .replaceAll(" ", "-")}`;
+
       return (
         <li class="category-item">
           <div class="category-row" style={`padding-left: ${depth * 24}px`}>
-            <span class="category-dot">·</span>
+            {hasChildren ? (
+              <button
+                type="button"
+                class="category-toggle"
+                aria-expanded={defaultExpanded ? "true" : "false"}
+                aria-controls={categoryId}
+                aria-label={
+                  defaultExpanded ? "Collapse category" : "Expand category"
+                }
+              >
+                <IconCaretDown
+                  class:list={[
+                    "category-caret size-5",
+                    { hidden: !defaultExpanded },
+                  ]}
+                  data-caret="down"
+                />
+
+                <IconCaretRight
+                  class:list={[
+                    "category-caret size-5",
+                    { hidden: defaultExpanded },
+                  ]}
+                  data-caret="right"
+                />
+              </button>
+            ) : (
+              <span class="category-dot">·</span>
+            )}
 
             <a
               href={getRelativeLocaleUrl(locale, `categories/${categoryPath}`)}
@@ -53,14 +94,72 @@ const sortedEntries = Object.entries(tree).sort(([a], [b]) => {
             </a>
           </div>
 
-          {Object.keys(children).length > 0 && (
-            <Astro.self tree={children} path={currentPath} depth={depth + 1} />
+          {hasChildren && (
+            <div
+              id={categoryId}
+              class="category-children"
+              hidden={!defaultExpanded}
+            >
+              <Astro.self
+                tree={children}
+                path={currentPath}
+                depth={depth + 1}
+              />
+            </div>
           )}
         </li>
       );
     })
   }
 </ul>
+
+<script>
+  function initCategoryToggles() {
+    const buttons =
+      document.querySelectorAll<HTMLButtonElement>(".category-toggle");
+
+    for (const button of buttons) {
+      if (button.dataset.bound === "true") continue;
+
+      button.dataset.bound = "true";
+
+      button.addEventListener("click", () => {
+        const targetId = button.getAttribute("aria-controls");
+        if (!targetId) return;
+
+        const target = document.getElementById(targetId);
+        if (!target) return;
+
+        const expanded = button.getAttribute("aria-expanded") === "true";
+        const nextExpanded = !expanded;
+
+        button.setAttribute("aria-expanded", nextExpanded ? "true" : "false");
+
+        button.setAttribute(
+          "aria-label",
+          nextExpanded ? "Collapse category" : "Expand category"
+        );
+
+        const downCaret = button.querySelector<HTMLElement>(
+          '[data-caret="down"]'
+        );
+
+        const rightCaret = button.querySelector<HTMLElement>(
+          '[data-caret="right"]'
+        );
+
+        downCaret?.classList.toggle("hidden", !nextExpanded);
+        rightCaret?.classList.toggle("hidden", nextExpanded);
+
+        target.hidden = !nextExpanded;
+      });
+    }
+  }
+
+  initCategoryToggles();
+
+  document.addEventListener("astro:after-swap", initCategoryToggles);
+</script>
 
 <style>
   ul {
@@ -76,9 +175,40 @@ const sortedEntries = Object.entries(tree).sort(([a], [b]) => {
     margin: 0.5rem 0;
   }
 
+  .category-toggle,
+  .category-dot {
+    width: 1.25rem;
+    flex-shrink: 0;
+  }
+
+  .category-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 1.25rem;
+    padding: 0;
+
+    color: var(--muted-foreground);
+    cursor: pointer;
+  }
+
+  .category-toggle:hover {
+    color: var(--accent);
+  }
+
+  .category-caret {
+    display: block;
+  }
+
+  .category-caret.hidden {
+    display: none;
+  }
+
   .category-dot {
     font-size: 1.2rem;
     line-height: 1;
+    text-align: center;
   }
 
   .category-link {
@@ -88,5 +218,9 @@ const sortedEntries = Object.entries(tree).sort(([a], [b]) => {
 
   .category-link:hover {
     color: var(--accent);
+  }
+
+  .category-children[hidden] {
+    display: none;
   }
 </style>
