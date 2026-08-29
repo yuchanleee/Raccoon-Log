@@ -73,7 +73,7 @@ export default defineConfig({
       cssVariable: "--font-nanum-gothic",
       provider: fontProviders.google(),
       fallbacks: ["sans-serif"],
-      weights: [400, 700, 800],
+      weights: [300, 400, 500, 600, 700],
       styles: ["normal"],
       formats: ["woff", "ttf"],
     },

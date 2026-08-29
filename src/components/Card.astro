@@ -18,7 +18,7 @@ const postUrl = getPostUrl(id, filePath, Astro.currentLocale);
 ---
 
 <li
-  class="mobile-tap-card mobile-tap-flash border-border my-8 border-b pb-8 last-of-type:border-b-0"
+  class="mobile-tap-card mobile-tap-flash border-border border-b px-1 py-3 last-of-type:border-b-0 min-[900px]:py-0"
   data-post-url={postUrl}
 >
   <div class="post-card">
@@ -26,7 +26,7 @@ const postUrl = getPostUrl(id, filePath, Astro.currentLocale);
       <a
         href={postUrl}
         class:list={[
-          "text-accent inline-block text-xl font-medium",
+          "text-accent inline-block text-xl font-medium min-[900px]:text-xl",
           "decoration-dashed underline-offset-4 hover:underline",
           "focus-visible:no-underline focus-visible:underline-offset-0",
         ]}
@@ -37,26 +37,34 @@ const postUrl = getPostUrl(id, filePath, Astro.currentLocale);
       </a>
 
       <div class="mt-1 mb-2 flex items-center gap-5">
-        <Datetime {...props} />
+        <Datetime {...props} size="lg" />
 
         {
           lowestCategory && (
             <span class="text-muted-foreground flex items-center gap-1">
               <IconCategory class="size-5" />
-              <span class="text-sm">{lowestCategory}</span>
+              <span class="text-xs min-[900px]:text-lg">{lowestCategory}</span>
             </span>
           )
         }
       </div>
 
-      <p>{description}</p>
+      <p class="min-[900px]:text-lg">{description}</p>
     </div>
 
-    {cover && <img src={cover.src} alt="" class="post-cover" />}
+    {
+      cover && (
+        <div class="post-cover-wrap">
+          <img src={cover.src} alt="" class="post-cover" />
+        </div>
+      )
+    }
   </div>
 </li>
 
 <script>
+  import { navigate } from "astro:transitions/client";
+
   function initMobilePostCards() {
     const cards = document.querySelectorAll<HTMLElement>(".mobile-tap-card");
 
@@ -75,7 +83,7 @@ const postUrl = getPostUrl(id, filePath, Astro.currentLocale);
 
         if (target.closest("a")) return;
 
-        window.location.href = url;
+        navigate(url);
       });
     }
   }
@@ -89,6 +97,7 @@ const postUrl = getPostUrl(id, filePath, Astro.currentLocale);
     display: flex;
     align-items: center;
     gap: 2rem;
+    min-height: 160px;
   }
 
   .post-content {
@@ -96,24 +105,47 @@ const postUrl = getPostUrl(id, filePath, Astro.currentLocale);
     min-width: 0;
   }
 
-  .post-cover {
-    width: 280px;
-    height: 200px;
+  .post-cover-wrap {
+    width: 160px;
+    height: 160px;
     flex-shrink: 0;
-    object-fit: cover;
+    overflow: hidden;
     border-radius: 10px;
+  }
+
+  .post-cover {
+    width: auto;
+    height: 100%;
+    max-width: none;
+  }
+
+  @media (max-width: 899px) {
+    .post-cover-wrap {
+      position: relative;
+    }
+
+    .post-cover-wrap::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-color: transparent;
+      pointer-events: none;
+    }
+
+    .mobile-tap-flash.tap-flash .post-cover-wrap::after {
+      background-color: color-mix(in srgb, var(--border) 65%, transparent);
+    }
   }
 
   @media (max-width: 639px) {
     .post-card {
-      flex-direction: column;
-      align-items: stretch;
+      min-height: 120px;
       gap: 1rem;
     }
 
-    .post-cover {
-      width: 280px;
-      height: 200px;
+    .post-cover-wrap {
+      width: 120px;
+      height: 120px;
     }
   }
 </style>

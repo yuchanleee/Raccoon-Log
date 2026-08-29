@@ -5,7 +5,6 @@ import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
-import Socials from "@/components/Socials.astro";
 import Card from "@/components/Card.astro";
 import LinkButton from "@/components/LinkButton.astro";
 import { getSortedPosts } from "@/utils/getSortedPosts";
@@ -13,7 +12,7 @@ import { useTranslations } from "@/i18n";
 import config from "@/config";
 import RaccoonSprite from "@/assets/images/raccoon.png";
 
-const { socials, posts: postsConfig } = config;
+const { posts: postsConfig } = config;
 
 const locale = Astro.currentLocale ?? config.site.lang;
 const t = useTranslations(locale);
@@ -34,30 +33,18 @@ const homePath = getRelativeLocaleUrl(locale, "");
     data-home-path={homePath}
     class="app-layout my-1"
   >
-    <section id="hero" class="border-border relative border-b pt-8 pb-6">
-      <div class="hero-content">
-        <h1 class="my-4 inline-block text-2xl font-bold sm:my-8 sm:text-3xl">
-          Raccoon's archive
-        </h1>
-
+    <section id="hero" class="border-border border-b">
+      <div class="raccoon-area">
         <div class="raccoon-frame">
           <div id="raccoon">
             <img id="raccoon-sprite" src={RaccoonSprite.src} alt="Raccoon" />
           </div>
         </div>
 
-        <p class="text-lg">볼 것도 없는 곳인데, 뭘 그리 두리번거리는가?</p>
-
-        {
-          socials.length > 0 && (
-            <div class="mt-4 flex max-sm:flex-col sm:items-center">
-              <div class="me-2 mb-1 whitespace-nowrap sm:mb-0">
-                {t.home.socialLinks}:
-              </div>
-              <Socials />
-            </div>
-          )
-        }
+        <div class="raccoon-speech">
+          어서 오시게. <br />
+          천천히 둘러보게<div class=""></div>
+        </div>
       </div>
     </section>
 
@@ -66,7 +53,7 @@ const homePath = getRelativeLocaleUrl(locale, "");
         <section
           id="featured"
           class:list={[
-            "pt-12 pb-6",
+            "pt-10",
             { "border-border border-b": recentPosts.length > 0 },
           ]}
         >
@@ -74,7 +61,7 @@ const homePath = getRelativeLocaleUrl(locale, "");
             {t.home.featured}
           </h2>
 
-          <ul>
+          <ul class="mt-1">
             {featuredPosts.map(data => (
               <Card variant="h3" {...data} />
             ))}
@@ -100,7 +87,10 @@ const homePath = getRelativeLocaleUrl(locale, "");
     }
 
     <div class="my-8 text-center">
-      <LinkButton href={getRelativeLocaleUrl(locale, "posts")}>
+      <LinkButton
+        href={getRelativeLocaleUrl(locale, "posts")}
+        class="px-4 py-2"
+      >
         {t.home.allPosts}
         <IconArrowRight class="inline-block rtl:-rotate-180" />
       </LinkButton>
@@ -127,14 +117,10 @@ const homePath = getRelativeLocaleUrl(locale, "");
 
     if (!raccoonSprite) return;
 
-    const getFrameWidth = () => {
-      return window.innerWidth <= 1100 ? 160 : 210;
-    };
+    const FRAME_WIDTH = 210;
 
     const showFrame = (frame: number) => {
-      const frameWidth = getFrameWidth();
-
-      raccoonSprite.style.transform = `translateX(-${frame * frameWidth}px)`;
+      raccoonSprite.style.transform = `translateX(-${frame * FRAME_WIDTH}px)`;
     };
 
     const wait = (ms: number) => {
@@ -174,28 +160,19 @@ const homePath = getRelativeLocaleUrl(locale, "");
 </script>
 
 <style>
-  #hero {
-    position: relative;
-  }
+  .raccoon-area {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
 
-  .hero-content {
-    min-width: 0;
+    padding-top: 3rem;
   }
 
   .raccoon-frame {
-    position: absolute;
-    top: calc(50% - 10px);
-    left: -220px;
+    width: 210px;
+    height: 210px;
 
-    width: 220px;
-    height: 240px;
-
-    transform: translateY(-50%);
-
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-
+    flex-shrink: 0;
     overflow: hidden;
   }
 
@@ -206,8 +183,6 @@ const homePath = getRelativeLocaleUrl(locale, "");
     height: 210px;
 
     overflow: hidden;
-
-    left: 15px;
   }
 
   #raccoon-sprite {
@@ -223,26 +198,35 @@ const homePath = getRelativeLocaleUrl(locale, "");
     image-rendering: pixelated;
   }
 
-  @media (max-width: 1100px) {
-    .raccoon-frame {
-      position: static;
+  .raccoon-speech {
+    position: relative;
 
-      width: 170px;
-      height: 170px;
+    padding: 0.75rem 1rem;
 
-      margin-top: 0.5rem;
-      transform: none;
-    }
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: var(--background);
 
-    #raccoon {
-      width: 160px;
-      height: 160px;
-      left: 0;
-    }
+    font-size: 1rem;
+    line-height: 1.6;
 
-    #raccoon-sprite {
-      width: 960px;
-      height: 160px;
-    }
+    transform: translateY(-80px);
+  }
+
+  .raccoon-speech::before {
+    content: "";
+
+    position: absolute;
+    left: -10px;
+    bottom: 24px;
+
+    width: 18px;
+    height: 18px;
+
+    border-left: 2px solid var(--border);
+    border-bottom: 2px solid var(--border);
+    background: var(--background);
+
+    transform: rotate(45deg);
   }
 </style>

@@ -335,6 +335,16 @@ const isActive = (path: string) => {
     });
   }
 
+  function lockPageScroll() {
+    document.body.style.position = "fixed";
+    document.body.style.width = "100%";
+  }
+
+  function unlockPageScroll() {
+    document.body.style.position = "";
+    document.body.style.width = "";
+  }
+
   function initMobileSearch() {
     const searchBtn =
       document.querySelector<HTMLButtonElement>("#mobile-search-btn");
@@ -354,7 +364,11 @@ const isActive = (path: string) => {
       searchBtn.setAttribute("aria-expanded", isOpen ? "false" : "true");
       searchPanel.classList.toggle("hidden", isOpen);
 
-      document.body.style.overflow = isOpen ? "" : "hidden";
+      if (isOpen) {
+        unlockPageScroll();
+      } else {
+        lockPageScroll();
+      }
 
       if (!isOpen) {
         const input = searchPanel.querySelector<HTMLInputElement>(

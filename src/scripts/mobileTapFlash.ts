@@ -14,7 +14,7 @@ export function initMobileTapFlash() {
 
             setTimeout(() => {
                 element.classList.remove("tap-flash");
-            }, 150);
+            }, 100);
         });
     }
 }

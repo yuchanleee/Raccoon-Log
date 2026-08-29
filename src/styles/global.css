@@ -46,10 +46,14 @@
 
 @media (max-width: 899px) {
   .mobile-tap-flash {
-    border-radius: 8px;
+    border-radius: 4px;
   }
 
   .mobile-tap-flash.tap-flash {
     background-color: var(--border);
+  }
+
+  .mobile-tap-flash.tap-flash .post-cover {
+    filter: brightness(0.8);
   }
 }

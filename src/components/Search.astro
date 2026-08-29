@@ -20,12 +20,16 @@ const pagefindBundlePath = getAssetPath("pagefind/");
 </div>
 
 <script>
+  import { initMobileTapFlash } from "@/scripts/mobileTapFlash";
+
   function enableResultLinks() {
     const results = document.querySelectorAll<HTMLElement>(
       ".pagefind-search .pagefind-ui__result"
     );
 
     for (const result of results) {
+      result.classList.add("mobile-tap-flash");
+
       if (result.dataset.clickable === "true") continue;
 
       const link = result.querySelector<HTMLAnchorElement>(
@@ -34,14 +38,18 @@ const pagefindBundlePath = getAssetPath("pagefind/");
 
       if (!link) continue;
 
+      link.setAttribute("data-astro-reload", "");
+
       result.dataset.clickable = "true";
 
       result.addEventListener("click", event => {
+        if (!window.matchMedia("(max-width: 899px)").matches) return;
+
         const target = event.target as HTMLElement;
 
         if (target.closest("a")) return;
 
-        link.click();
+        window.location.href = link.href;
       });
     }
   }
@@ -58,6 +66,7 @@ const pagefindBundlePath = getAssetPath("pagefind/");
 
       const observer = new MutationObserver(() => {
         enableResultLinks();
+        initMobileTapFlash();
       });
 
       observer.observe(searchContainer, {
@@ -102,10 +111,12 @@ const pagefindBundlePath = getAssetPath("pagefind/");
 
   initSearch();
   observeResults();
+  initMobileTapFlash();
 
   document.addEventListener("astro:after-swap", () => {
     initSearch();
     observeResults();
+    initMobileTapFlash();
   });
 </script>
 
@@ -127,9 +138,14 @@ const pagefindBundlePath = getAssetPath("pagefind/");
     background-color: var(--foreground);
   }
 
-  .pagefind-search input {
-    font-weight: 400;
+  .pagefind-search .pagefind-ui__search-input {
+    font-weight: 500;
     border: 1px solid var(--border);
+  }
+  .pagefind-search .pagefind-ui__message {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--foreground);
   }
 
   .pagefind-search input:focus-visible {
@@ -140,16 +156,9 @@ const pagefindBundlePath = getAssetPath("pagefind/");
     .pagefind-ui
     .pagefind-ui__result-title
     .pagefind-ui__result-link {
-    color: var(--pagefind-ui-text);
+    color: var(--accent);
     outline-offset: 1px;
     outline-color: var(--accent);
-    text-decoration: none;
-  }
-
-  .pagefind-search
-    .pagefind-ui
-    .pagefind-ui__result-title
-    .pagefind-ui__result-link:hover {
     text-decoration: none;
   }
 
@@ -171,13 +180,28 @@ const pagefindBundlePath = getAssetPath("pagefind/");
   }
 
   .pagefind-search .pagefind-ui .pagefind-ui__result {
+    min-height: 140px;
     padding: 10px 4px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.15s ease;
   }
 
-  .pagefind-search .pagefind-ui__result:hover {
-    background-color: var(--border);
+  .pagefind-search .pagefind-ui__result-title {
+    margin-bottom: 10px;
+  }
+
+  @media (max-width: 899px) {
+    .pagefind-search .pagefind-ui__result-title {
+      margin-bottom: 16px;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .pagefind-search
+      .pagefind-ui
+      .pagefind-ui__result-title
+      .pagefind-ui__result-link:hover {
+      text-decoration-line: underline;
+      text-decoration-style: dashed;
+      text-underline-offset: 4px;
+    }
   }
 </style>
