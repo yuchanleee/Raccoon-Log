@@ -23,5 +23,3 @@ description: Test for tree structure.
     allowfullscreen>
   </iframe>
 </div>
-
-안녕하세요 한글 글씨체 테스트입니다.

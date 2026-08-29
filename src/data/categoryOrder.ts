@@ -1,5 +1,5 @@
 export const categoryOrder: Record<string, string[]> = {
-    root: ["Math", "Computer Science", "Projects", "Daily Life", "others"],
+    root: ["Math", "Computer Science", "3D printer", "Projects", "Daily Life", "others"],
 
     "Math": ["analysis", "linear-algebra"],
 

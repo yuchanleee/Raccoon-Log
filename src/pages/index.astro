@@ -41,10 +41,7 @@ const homePath = getRelativeLocaleUrl(locale, "");
           </div>
         </div>
 
-        <div class="raccoon-speech">
-          어서 오시게. <br />
-          천천히 둘러보게<div class=""></div>
-        </div>
+        <div class="raccoon-speech">ㅎㅇ</div>
       </div>
     </section>
 
@@ -163,7 +160,7 @@ const homePath = getRelativeLocaleUrl(locale, "");
   .raccoon-area {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 0rem;
 
     padding-top: 3rem;
   }
@@ -201,14 +198,14 @@ const homePath = getRelativeLocaleUrl(locale, "");
   .raccoon-speech {
     position: relative;
 
-    padding: 0.75rem 1rem;
+    padding: 0.45rem 0.75rem;
 
     border: 2px solid var(--border);
     border-radius: 8px;
     background: var(--background);
 
-    font-size: 1rem;
-    line-height: 1.6;
+    font-size: 0.875rem;
+    line-height: 1.4;
 
     transform: translateY(-80px);
   }
@@ -217,16 +214,16 @@ const homePath = getRelativeLocaleUrl(locale, "");
     content: "";
 
     position: absolute;
-    left: -10px;
-    bottom: 24px;
+    left: -8px;
+    top: 50%;
 
-    width: 18px;
-    height: 18px;
+    width: 12px;
+    height: 12px;
 
     border-left: 2px solid var(--border);
     border-bottom: 2px solid var(--border);
     background: var(--background);
 
-    transform: rotate(45deg);
+    transform: translateY(-50%) rotate(45deg);
   }
 </style>

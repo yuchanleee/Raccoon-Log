@@ -69,8 +69,8 @@ export default defineConfig({
       formats: ["woff", "ttf"],
     },
     {
-      name: "Nanum Gothic",
-      cssVariable: "--font-nanum-gothic",
+      name: "Noto Sans KR",
+      cssVariable: "--font-noto-sans-kr",
       provider: fontProviders.google(),
       fallbacks: ["sans-serif"],
       weights: [300, 400, 500, 600, 700],
