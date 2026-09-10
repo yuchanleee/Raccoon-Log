@@ -28,10 +28,26 @@ $$
 
 ### 푸리에 급수 
 
+주기가 $T$인 주기함수 $f(x)$에 대하여 푸리에 급수는 다음과 같다
+
+$$
+f(x)
+\sim
+\frac{a_0}{2}
++
+\sum_{n=1}^{\infty}
+\left(
+a_n\cos\left(\frac{2\pi n x}{T}\right)
++
+b_n\sin\left(\frac{2\pi n x}{T}\right)
+\right)
+$$
+
+
+
 1. 삼각함수 직교 -> 무한차원 기저
-2. fejer kernal 
-3. 푸리에 급수 부분합 이해 
-4. 부분합이 수렴 -> 푸리에 급수가 수렴 
+2. 푸리에 급수와 부분합 정의
+3. Fejér kernal 이해 및 f(x) 수렴성 증명 
 
 이 순서로 이해하면 됨 
 
