@@ -52,6 +52,10 @@
 
     img {
       @apply border-border mx-auto border;
+
+      width: 500px !important;
+      max-width: 100% !important;
+      height: auto !important;
     }
 
     img[role="button"] {
@@ -64,6 +68,9 @@
 
     figcaption {
       @apply opacity-75;
+      text-align: center;
+      margin-top: -1rem;
+      margin-bottom: 2rem;
     }
 
     table {
